@@ -191,25 +191,18 @@ public class DictionaryAttack {
      * @return Either the original password or the method sends back 'Not Found'
      */
     public static String attackNoRainbow(List<String> dict, String hpw, String salt) {
-        List<String> pwdWsalt = new LinkedList<>();
+        List<String> pwdSalt = new LinkedList<>();
         for (String pwd : dict) {
-            pwdWsalt.add(pwd + salt);
+            pwdSalt.add(pwd + salt);
         }
 
-        for (String salted : pwdWsalt) {
+        for (String salted : pwdSalt) {
             if (hash(salted).equals(hpw)) {
+                System.out.println(salted);
                 return salted;
             }
         }
 
-        /**
-         * for(String salted:pwdWsalt){
-         *             if(hash(s+salt).equals(hpw)){
-         *                 return s;
-         *             }
-         *         }
-         *
-         */
         return "Not Found";
     }
 
@@ -229,21 +222,25 @@ public class DictionaryAttack {
         Map<String, String> hpwMap = getSaltedMap(getHpwInput(hpwPath));
         List<String> outList = new LinkedList<>();
 
-        /**  List<String> hpwList=getHpwInput(hpwPath);
-         List<String> output=new LinkedList<>();
-         for (String hpw:hpwList) {
-         String[] hs = hpw.split("  ");
-         output.add(attackNoRainbow(dict,hs[0],hs[1]));
-         }
-         saveOutText(output,outPath);*/
+        List<String> hpwList = getHpwInput(hpwPath);
+        List<String> output = new LinkedList<>();
+        for (String hpw : hpwList) {
+            String[] hs = hpw.split(" ");
+            output.add(attackNoRainbow(dict, hs[0], hs[1]));
+        }
+        saveOutText(output, outPath);
+    }
 
 
+    // returns a password in plain-text from a salt and hash value
+    public static String attackWithSalt(List<String> dict, String hash, String salt) {
+        return (attackNoRainbow(dict, hash, salt));
     }
 
     public static Map<String, String> getSaltedMap(List<String> hpw) {
         Map<String, String> saltedMap = new HashMap<>();
         for (String salted : hpw) {
-            String[] hs = salted.split("  ");
+            String[] hs = salted.split(" ");
             saltedMap.put(hs[0], hs[1]);
         }
         return saltedMap;
