@@ -65,6 +65,35 @@ public class PasswordHashMethod {
         return out+" "+s;
     }
 
+    public PasswordHashMethod(){
+
+    }
+    public String hashingOut(int i,String o){
+        String hashedtxt="";
+        if(i==1){
+            hashedtxt=hash(o);
+        }
+        else if(i==2){
+           hashedtxt= MD5(o);
+        }
+        else if(i==3){
+            hashedtxt=getSHA512(o);
+        }
+        else if(i==4){
+            hashedtxt=saltMethod(o);
+        }
+        return hashedtxt;
+
+    }
+    public List<String> hashList(List<String> o, int i){
+        List<String> out=new ArrayList<>();
+        for(int b=0;b<10;b++){
+            out.add(hashingOut(i,o.get(b)));
+
+        }
+        return out;
+    }
+
 
 
 
@@ -91,12 +120,15 @@ public class PasswordHashMethod {
     }
 
     public static void main(String[] args) {
-        String a="BobbyNoNose";
+       String a="TestPasswordEXP";
+        GenerateSalt s=new GenerateSalt();
+       // String a=s.nextString();
+
 
         System.out.println(a);
-        System.out.println(hash(a)+"\n Length: "+hash(a).length());
-        System.out.println(MD5(a)+"\n Length: "+MD5(a).length());
-        System.out.println(getSHA512(a)+"\n Length: "+getSHA512(a).length());
-        System.out.println(saltMethod(a));
+        System.out.println(hash(a)+"\n Hash Length: "+hash(a).length());
+        System.out.println(MD5(a)+"\n MD5 Length: "+MD5(a).length());
+        System.out.println(getSHA512(a)+"\n SHA512 Length: "+getSHA512(a).length());
+        System.out.println(saltMethod(a)+"\n Salted Length: "+saltMethod(a).length());
     }
 }

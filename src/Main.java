@@ -27,7 +27,7 @@ public class Main {
                 // todo: user types a hash and the program will try to figure out what the password is
                 System.out.println("Enter a hash: ");
 
-                // test hash = 58272d1f2278f20b60f4ced466a1e68df1c2b1bc45e7f7688fc64ab34b053cf1
+                // test hash= 58272d1f2278f20b60f4ced466a1e68df1c2b1bc45e7f7688fc64ab34b053cf1
                 // test hash with salt = c5da5dc7a284564bc49d998e2940c600ad57eaa48cea838e5e7fd5a6e0dcacd3 15f4d84d2c010a30
 
                 userInput = in.nextLine();

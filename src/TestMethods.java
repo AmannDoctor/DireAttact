@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TestMethods {
@@ -35,15 +36,22 @@ public class TestMethods {
     }
 
     public static void main(String[] args) {
-        HashMap<String,String> UserMap=new HashMap<>();
-        UserMap.put("U1","134");
-        UserMap.put("U3","3423");
-        UserMap.put("U6","44444");
-        HashMap<String,String> UsT=new HashMap<>();
-        UsT.put("U1","134");
-        UsT.put("U3","352");
-        UsT.put("U2","4545444");
+        FileMethods fm=new FileMethods();
+        PasswordHashMethod phm=new PasswordHashMethod();
+        List<String> d=fm.getDict("realhuman_phill.txt");
 
-        checkUserTable(UserMap,UsT);
+
+        for (int i = 1; i <5 ; i++) {
+
+            String lm="userTestData"+i+".txt";
+            HashMap<String,String> ut=fm.getUserTable(lm);
+            System.out.println("\n\n User Table #"+i+": \n\n"+ut.toString());
+
+
+
+
+        }
+
+
     }
 }
