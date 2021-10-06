@@ -38,7 +38,7 @@ public class TestMethods {
     public static void main(String[] args) {
         FileMethods fm=new FileMethods();
         PasswordHashMethod phm=new PasswordHashMethod();
-        List<String> d=fm.getDict("realhuman_phill.txt");
+        List<String> d=fm.getDict("attackDictionary.txt");
 
 
         for (int i = 1; i <5 ; i++) {

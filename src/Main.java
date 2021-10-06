@@ -11,7 +11,7 @@ public class Main {
         List<String> dict = DictionaryAttack.getDict("smalldict.txt");
         Map<String, String> passwordDictionary = DictionaryAttack.getRainbow(dict);
 
-
+        // user command loop
         while (true) {
             System.out.println("What is your command: ");
             userInput = in.nextLine();
@@ -19,11 +19,17 @@ public class Main {
             if (userInput.equals("x")) {
                 System.out.println("Exiting program");
                 break;
-            } else if (userInput.equals("help")) {
+            }
+            else if (userInput.equals("help")) {
+                System.out.println("-----");
+                System.out.println("[x] to exit the program");
+                System.out.println("[mixup] to remix a password that you put in");
                 System.out.println("[password] command will ask the user to enter a single password hash and attempt to crack it");
                 // todo: Help command
                 ;
-            } else if (userInput.equals("password")) {
+            }
+            // attempts to crack a hash you give it using a rainbow table
+            else if (userInput.equals("password")) {
                 // todo: user types a hash and the program will try to figure out what the password is
                 System.out.println("Enter a hash: ");
 
@@ -32,11 +38,12 @@ public class Main {
 
                 userInput = in.nextLine();
 
-                // attempts to crack a hash you give it using a rainbow table
-
                 // space separating the hash AND the SALT
 
-                // if the user input has a hash AND a SALT with a space separating both of them it will attempt to crack it with salt
+                /*
+                 if the user input has a hash AND a SALT with a space separating both of them,
+                 it will attempt to crack it with salt
+                 */
                 if (userInput.contains(" ")) {
                     // todo: fix salt, it will print the plain-text password BUT ALSO THE SALT ATTACHED to it
 
@@ -53,8 +60,20 @@ public class Main {
                     System.out.println("the attempted password is " + attempt_password);
                 }
             }
+            else if(userInput.equals("mixup")){
+                System.out.println("Enter a password to mix up");
+                userInput = in.next();
 
+                System.out.println("-------");
+                System.out.println("Current password: " + userInput);
+
+                // todo: leet code
+
+
+
+
+                // todo: Caesar cipher
+            }
         }
-
     }
 }

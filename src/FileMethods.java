@@ -183,7 +183,7 @@ public class FileMethods {
     public static void main(String[] args) {
         FileMethods fm=new FileMethods();
         PasswordHashMethod phm=new PasswordHashMethod();
-        List<String> read=fm.getDict("realhuman_phill.txt");
+        List<String> read=fm.getDict("attackDictionary.txt");
        // List<String> or=getDict("smalldict.txt");
       //  System.out.println(com(read,or));
         for (int i = 1; i <5 ; i++) {

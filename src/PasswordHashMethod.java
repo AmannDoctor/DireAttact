@@ -1,10 +1,7 @@
-import jdk.swing.interop.SwingInterOpUtils;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.util.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PasswordHashMethod {

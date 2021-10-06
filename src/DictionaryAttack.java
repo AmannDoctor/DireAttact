@@ -198,7 +198,6 @@ public class DictionaryAttack {
 
         for (String salted : pwdSalt) {
             if (hash(salted).equals(hpw)) {
-                System.out.println(salted);
                 return salted;
             }
         }
