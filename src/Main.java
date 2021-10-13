@@ -1,9 +1,10 @@
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // write your code here
         Scanner in = new Scanner(System.in);
         String userInput;
@@ -19,8 +20,16 @@ public class Main {
             if (userInput.equals("x")) {
                 System.out.println("Exiting program");
                 break;
-            }
-            else if (userInput.equals("help")) {
+            } else if (userInput.equals("test")) {
+                // todo: fully implement and remove
+                System.out.println("running large dictionary attack test");
+                long startTime = System.nanoTime();
+                NewDictionaryAttack.dictionary_hash("58272d1f2278f20b60f4ced466a1e68df1c2b1bc45e7f7688fc64ab34b053cf1");
+                long endTime = System.nanoTime();
+
+                long duration = (endTime - startTime) / 1000000;
+                System.out.println("The execution time in milliseconds: " + duration);
+            } else if (userInput.equals("help")) {
                 System.out.println("-----");
                 System.out.println("[x] to exit the program");
                 System.out.println("[mixup] to remix a password that you put in");
@@ -30,7 +39,6 @@ public class Main {
             }
             // attempts to crack a hash you give it using a rainbow table
             else if (userInput.equals("password")) {
-                // todo: user types a hash and the program will try to figure out what the password is
                 System.out.println("Enter a hash: ");
 
                 // test hash= 58272d1f2278f20b60f4ced466a1e68df1c2b1bc45e7f7688fc64ab34b053cf1
@@ -45,10 +53,17 @@ public class Main {
                  it will attempt to crack it with salt
                  */
                 if (userInput.contains(" ")) {
-                    // todo: fix salt, it will print the plain-text password BUT ALSO THE SALT ATTACHED to it
 
                     String[] userInputArray = userInput.split(" ", 2);
+
+                    // time the execution
+                    long startTime = System.nanoTime();
                     String attempt = DictionaryAttack.attackWithSalt(dict, userInputArray[0], userInputArray[1]);
+                    long endTime = System.nanoTime();
+
+                    long duration = (endTime - startTime) / 1000000;
+                    System.out.println("The execution time in milliseconds: " + duration);
+
 
                     // remove salt value from output
                     attempt = attempt.replace(userInputArray[1], "");
@@ -59,8 +74,7 @@ public class Main {
                     String attempt_password = DictionaryAttack.attackRainbow(passwordDictionary, userInput);
                     System.out.println("the attempted password is " + attempt_password);
                 }
-            }
-            else if(userInput.equals("mixup")){
+            } else if (userInput.equals("mixup")) {
                 System.out.println("Enter a password to mix up");
                 userInput = in.next();
 
@@ -68,8 +82,6 @@ public class Main {
                 System.out.println("Current password: " + userInput);
 
                 // todo: leet code
-
-
 
 
                 // todo: Caesar cipher
