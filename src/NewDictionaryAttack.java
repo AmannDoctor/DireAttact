@@ -19,10 +19,10 @@ public class NewDictionaryAttack {
 
             String line = dictionary.readLine();
             // iterate through each line
-            while(line != null){
+            while (line != null) {
 
                 // if password found break;
-                if(attackNoSalt(line, inputHash)){
+                if (attackNoSalt(line, inputHash)) {
                     break;
                 }
                 rainbowTable.put(line, "");
@@ -36,9 +36,9 @@ public class NewDictionaryAttack {
     }
 
     // attack with no salted password, returns true if found and prints the password
-    public static boolean attackNoSalt(String nextLine, String inputHash){
+    public static boolean attackNoSalt(String nextLine, String inputHash) {
         String dict_hash = hash(nextLine);
-        if(dict_hash.equals(inputHash)){
+        if (dict_hash.equals(inputHash)) {
             System.out.println("password is " + nextLine);
             return true;
         }
