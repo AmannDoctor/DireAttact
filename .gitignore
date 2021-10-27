@@ -1,3 +1,5 @@
 
 .idea/misc.xml
 Dictionary/dictionary.txt
+*.class
+Dictionary/realhuman_phill.txt
