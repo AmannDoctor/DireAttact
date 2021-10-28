@@ -7,22 +7,27 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class databaseTest {
 
     public static void main(String[] args) throws SQLException, FileNotFoundException {
 
+        /* Sample Hashes
+        // 2921e3d38c18022f3924165ec5252862576c390aa11aef99e659db5024680880
+        // 58272d1f2278f20b60f4ced466a1e68df1c2b1bc45e7f7688fc64ab34b053cf1
+         */
+
         // time start
         long startTime = System.nanoTime();
 
-        getPassword("2921e3d38c18022f3924165ec5252862576c390aa11aef99e659db5024680880");
+
+        //getPassword("2921e3d38c18022f3924165ec5252862576c390aa11aef99e659db5024680880");
         //getPasswordFromTextFile("58272d1f2278f20b60f4ced466a1e68df1c2b1bc45e7f7688fc64ab34b053cf1");
 
         // time end
         long endTime = System.nanoTime();
-
-
 
 
         long duration = (endTime - startTime) / 1000000;
@@ -36,7 +41,6 @@ public class databaseTest {
         Statement statement = conn.createStatement();
         //ResultSet resultSet = statement.executeQuery("SELECT * from passwords");
         //ResultSet resultSet = statement.executeQuery("INSERT INTO passwords");
-        Statement stmt = conn.createStatement();
     }
 
     // get password from database
@@ -45,30 +49,67 @@ public class databaseTest {
         System.out.println("Successfully Connected to the database!");
 
         Statement statement = conn.createStatement();
-        String hashQuery = "SELECT `Password`,`PasswordHash` FROM `passworddb`.`passwords` WHERE `PasswordHash` = '" + hash+"'";
+        String hashQuery = "SELECT `Password`,`PasswordHash` FROM `passworddb`.`passwords` WHERE `PasswordHash` = '" + hash + "'";
+        //SELECT id, first, last, age FROM Registration
+
 
         ResultSet results = statement.executeQuery(hashQuery);
 
         String found = "";
+        // returns the searched hash in the database
         if (results.next()) {
             found = results.getString(1);
         }
 
-        // if the hash is not found in the databaase, insert the new hash into the database
-        if(found.equals("")){
+        // if the hash is not found in the database, insert the new hash into the database
+        if (found.equals("")) {
             System.out.println("Hash not found within the database \nGenerating Hashes...\n");
-
+            insertHash();
         }
 
         System.out.println("password is : " + found);
     }
 
     // generate hash
+    public static void insertHash() throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/passworddb", "root", "bilikayo12");
+        Statement statement = conn.createStatement();
 
+        // get all passwords in the database that are UNHASHED
+        String unhashed = "SELECT `Password`,`PasswordHash` FROM `passworddb`.`passwords` WHERE `PasswordHash` ='' LIMIT 10000000";
+        PreparedStatement pst1 = conn.prepareStatement(unhashed);
+        ResultSet resultSet = statement.executeQuery(unhashed);
+        conn.setAutoCommit(false);
+        try{
+            while (resultSet.next()) {
+                String found = resultSet.getString(1);
+
+                // hashing passwords
+                String sql = "UPDATE `passworddb`.`passwords` SET `PasswordHash` = '" + hash(found) + "' WHERE `Password` = '" + found + "'";
+                pst1.addBatch(sql);
+            }
+            pst1.executeLargeBatch();
+        }catch (Exception ignored){
+
+        }
+
+
+        conn.commit();
+        System.out.println("added to database");
+        ResultSet rs = statement.executeQuery("SELECT COUNT(*) as total FROM `passworddb`.`passwords` WHERE `PasswordHash` != ''");
+
+        while (rs.next()){
+            String count = rs.getString("total");
+            System.out.println("row count: " + count);
+        }
+
+
+
+    }
 
     // solves hash given by user
     public static void getPasswordFromTextFile(String inputHash) throws FileNotFoundException {
-
+        System.out.println("finding Hashed password please wait");
         BufferedReader dictionary;
         Map<String, String> rainbowTable = new HashMap<>();
         ArrayList<String> half = new ArrayList<>();
