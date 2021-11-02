@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class databaseTest {
 
@@ -19,19 +16,9 @@ public class databaseTest {
         // 58272d1f2278f20b60f4ced466a1e68df1c2b1bc45e7f7688fc64ab34b053cf1
          */
 
-        // time start
-        long startTime = System.nanoTime();
+        // sample password check: cporjjkn
 
-
-        //getPassword("2921e3d38c18022f3924165ec5252862576c390aa11aef99e659db5024680880");
-        //getPasswordFromTextFile("58272d1f2278f20b60f4ced466a1e68df1c2b1bc45e7f7688fc64ab34b053cf1");
-
-        // time end
-        long endTime = System.nanoTime();
-
-
-        long duration = (endTime - startTime) / 1000000;
-        System.out.println("The execution time in milliseconds: " + duration);
+        commands();
     }
 
     public void insertPassword(String pass) throws SQLException {
@@ -66,8 +53,36 @@ public class databaseTest {
             System.out.println("Hash not found within the database \nGenerating Hashes...\n");
             insertHash();
         }
+        else{
+            System.out.println("password is : " + found);
+            return;
+        }
 
-        System.out.println("password is : " + found);
+        System.out.println("password is not found");
+    }
+
+    // check if password is in the database
+    public static void checkPass(String pass) throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/passworddb", "root", "bilikayo12");
+        System.out.println("Successfully Connected to the database!");
+
+        Statement statement = conn.createStatement();
+        String hashQuery = "SELECT * FROM `passworddb`.`passwords` WHERE `Password` = '" + pass + "'";
+
+        final PreparedStatement ps = conn.prepareStatement(hashQuery);
+        final ResultSet resultSet = ps.executeQuery();
+
+        String found = "";
+        // returns the searched hash in the database
+        if(resultSet.next()) {
+            final int count = resultSet.getInt(1);
+            if(count > 0){
+                System.out.println(pass + " is in the Database");
+            }
+        }
+        else{
+            System.out.println("Password is not in the database adding and hashing to the database");
+        }
     }
 
     // generate hash
@@ -76,11 +91,11 @@ public class databaseTest {
         Statement statement = conn.createStatement();
 
         // get all passwords in the database that are UNHASHED
-        String unhashed = "SELECT `Password`,`PasswordHash` FROM `passworddb`.`passwords` WHERE `PasswordHash` ='' LIMIT 10000000";
+        String unhashed = "SELECT `Password`,`PasswordHash` FROM `passworddb`.`passwords` WHERE `PasswordHash` ='"+"' LIMIT 100000";
         PreparedStatement pst1 = conn.prepareStatement(unhashed);
         ResultSet resultSet = statement.executeQuery(unhashed);
         conn.setAutoCommit(false);
-        try{
+        try {
             while (resultSet.next()) {
                 String found = resultSet.getString(1);
 
@@ -89,7 +104,7 @@ public class databaseTest {
                 pst1.addBatch(sql);
             }
             pst1.executeLargeBatch();
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
 
@@ -98,11 +113,10 @@ public class databaseTest {
         System.out.println("added to database");
         ResultSet rs = statement.executeQuery("SELECT COUNT(*) as total FROM `passworddb`.`passwords` WHERE `PasswordHash` != ''");
 
-        while (rs.next()){
+        while (rs.next()) {
             String count = rs.getString("total");
             System.out.println("row count: " + count);
         }
-
 
 
     }
@@ -174,5 +188,47 @@ public class databaseTest {
         }
 
         return hexString;
+    }
+
+    public static void commands() throws SQLException, FileNotFoundException {
+        Scanner in = new Scanner(System.in);
+        String hash;
+        System.out.println("Enter a command: [db][text][passwordCheck]");
+        while (true){
+            switch (in.nextLine().toLowerCase()) {
+                case "database":
+                case "db":
+                    System.out.println("Enter a sample Hash here");
+                    hash = in.nextLine();
+                    long startTime = System.nanoTime();
+                    getPassword(hash);
+                    long endTime = System.nanoTime();
+                    long duration = (endTime - startTime) / 1000000;
+                    System.out.println("The execution time in milliseconds: " + duration);
+                    break;
+                case "text":
+                case "tex":
+                    System.out.println("Enter a sample Hash here");
+                    hash = in.nextLine();
+                    long startTimee = System.nanoTime();
+                    getPasswordFromTextFile(hash);
+                    long endTimee = System.nanoTime();
+                    System.out.println("The execution time in milliseconds: " + (endTimee - startTimee) / 1000000);
+                    break;
+                case "password":
+                case "pwdc":
+                case "passwordcheck":
+                    System.out.println("Enter a password: ");
+                    checkPass(in.nextLine());
+                    break;
+                case "x":
+                case "exit":
+                    return;
+                default:
+                    System.out.println("Enter a valid command");
+                    System.out.println("[database][text]");
+            }
+        }
+
     }
 }
