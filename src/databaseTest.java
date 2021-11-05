@@ -37,23 +37,23 @@ public class databaseTest {
 
         Statement statement = conn.createStatement();
         String hashQuery = "SELECT `Password`,`PasswordHash` FROM `passworddb`.`passwords` WHERE `PasswordHash` = '" + hash + "'";
-        //SELECT id, first, last, age FROM Registration
-
+        //SELECT id
 
         ResultSet results = statement.executeQuery(hashQuery);
 
         String found = "";
         // returns the searched hash in the database
-        if (results.next()) {
-            found = results.getString(1);
+        while (results.next()) {
+            if (results.getString(2).equals(hash)) {
+                found = results.getString(1);
+            }
         }
 
         // if the hash is not found in the database, insert the new hash into the database
         if (found.equals("")) {
             System.out.println("Hash not found within the database \nGenerating Hashes...\n");
             insertHash();
-        }
-        else{
+        } else {
             System.out.println("password is : " + found);
             return;
         }
@@ -62,6 +62,9 @@ public class databaseTest {
     }
 
     // check if password is in the database
+    /*
+    If password is not in the database it will add the missing password with it's Hash
+     */
     public static void checkPass(String pass) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/passworddb", "root", "bilikayo12");
         System.out.println("Successfully Connected to the database!");
@@ -70,18 +73,28 @@ public class databaseTest {
         String hashQuery = "SELECT * FROM `passworddb`.`passwords` WHERE `Password` = '" + pass + "'";
 
         final PreparedStatement ps = conn.prepareStatement(hashQuery);
-        final ResultSet resultSet = ps.executeQuery();
+        ResultSet resultSet = ps.executeQuery();
 
         String found = "";
         // returns the searched hash in the database
-        if(resultSet.next()) {
-            final int count = resultSet.getInt(1);
-            if(count > 0){
+        if (resultSet.next()) {
+            String entry = resultSet.getString(1);
+            if (entry.equals(pass)) {
                 System.out.println(pass + " is in the Database");
             }
-        }
-        else{
+        } else {
             System.out.println("Password is not in the database adding and hashing to the database");
+            statement = conn.createStatement();
+
+            // get all passwords in the database that are UNHASHED
+            //('" + pass + "','" + hash(pass) + "')"
+            String insertPass = "INSERT INTO `passworddb`.`passwords` (Password, PasswordHash)" +
+                    "VALUES ('" + pass + "','" + hash(pass) + "')";
+
+            PreparedStatement pst1 = conn.prepareStatement(insertPass);
+            pst1.addBatch(insertPass);
+            pst1.executeLargeBatch();
+            System.out.println("New password added: " + pass);
         }
     }
 
@@ -91,7 +104,7 @@ public class databaseTest {
         Statement statement = conn.createStatement();
 
         // get all passwords in the database that are UNHASHED
-        String unhashed = "SELECT `Password`,`PasswordHash` FROM `passworddb`.`passwords` WHERE `PasswordHash` ='"+"' LIMIT 100000";
+        String unhashed = "SELECT `Password`,`PasswordHash` FROM `passworddb`.`passwords` WHERE `PasswordHash` ='" + "' LIMIT 100000";
         PreparedStatement pst1 = conn.prepareStatement(unhashed);
         ResultSet resultSet = statement.executeQuery(unhashed);
         conn.setAutoCommit(false);
@@ -193,8 +206,8 @@ public class databaseTest {
     public static void commands() throws SQLException, FileNotFoundException {
         Scanner in = new Scanner(System.in);
         String hash;
-        System.out.println("Enter a command: [db][text][passwordCheck]");
-        while (true){
+        while (true) {
+            System.out.println("Enter a command: [db][text][passwordCheck]");
             switch (in.nextLine().toLowerCase()) {
                 case "database":
                 case "db":
