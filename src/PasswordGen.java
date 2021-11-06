@@ -32,24 +32,24 @@ public class PasswordGen extends Password{
 
     }
 
-    public PasswordGen(String first,String last,int month,int day){
+    public void genPersonPass(Person person){
         String m="";
         String d="";
 
-        if(month<10){
-            m="0"+month;
+        if(person.getBm()<10){
+            m="0"+person.getBm();
         }
         else{
-            m=""+month;
+            m=""+person.getBm();
         }
-        if(day<10){
-            d="0"+day;
+        if(person.getBd()<10){
+            d="0"+person.getBd();
         }
         else{
-            d=""+day;
+            d=""+person.getBd();
         }
 
-        pass.setPassword(""+first.toUpperCase().charAt(0)+last.toUpperCase().charAt(0)+m);
+        pass.setPassword(""+person.getFn().toUpperCase().charAt(0)+person.getLn().toUpperCase().charAt(0)+m+d);
 
     }
     public PasswordGen(String securityAnswer1,String securityAnswer2,String securityAnswer3){
@@ -95,7 +95,7 @@ public class PasswordGen extends Password{
 
         }
         int a=(size/tol);
-        System.out.println("Average Size: "+a);
+       // System.out.println("Average Size: "+a);
 
         String ma=Collections.max(dic, Comparator.comparing(String::length));
         String mi=Collections.min(dic, Comparator.comparing(String::length));
@@ -104,7 +104,7 @@ public class PasswordGen extends Password{
         int randompasssize=mi.length()+r.nextInt(ma.length()-mi.length());
 
 
-        System.out.println("Across "+total[0]+" passwords, there are an average of "+(total[1]/total[0])+" characters, of which "+(float)((total[2]*100)/total[1])+"% are digital, "+(float)((total[3]*100)/total[1])+"% are special characters, "+(float)((total[4]*100)/total[1])+"% are uppercase, and "+(float)((total[5]*100)/total[1])+"% are lower case.");
+     //   System.out.println("Across "+total[0]+" passwords, there are an average of "+(total[1]/total[0])+" characters, of which "+(float)((total[2]*100)/total[1])+"% are digital, "+(float)((total[3]*100)/total[1])+"% are special characters, "+(float)((total[4]*100)/total[1])+"% are uppercase, and "+(float)((total[5]*100)/total[1])+"% are lower case.");
         String pstring="";
         for (int i = 0; i < randompasssize; i++) {
 
@@ -129,7 +129,8 @@ public class PasswordGen extends Password{
 
 
         }
-        System.out.println(pstring);
+        //System.out.println(pstring);
+        pass.setPassword(pstring);
 
 
 
@@ -146,7 +147,7 @@ public class PasswordGen extends Password{
 
         Collections.shuffle(l);
         String o=l.get(0)+""+(r.nextInt(10000));
-        System.out.println(o);
+        //System.out.println(o);
         pass.setPassword(o);
 
 
@@ -159,15 +160,33 @@ public class PasswordGen extends Password{
         return info;
     }
 
+    public void generateTxtFile(int iter){
+
+        for (int i = 0; i < iter; i++) {
+            if(i%3==0){
+                randomizeString();
+            }
+            else if(i%2==0){
+                generatePasswordInfo();
+            }
+            else{
+                GenerateRandomPerson grp = new GenerateRandomPerson();
+                genPersonPass(grp.genranper());
+            }
+            System.out.println(pass.getPassword());
+        }
+
+
+    }
+
 
 
     public static void main(String[] args) {
         PasswordGen pg=new PasswordGen();
-        for(int i=0;i<10;i++) {
-            pg.generatePasswordInfo();
-            pg.randomizeString();
 
-        }
+            pg.generateTxtFile(15);
+
+
 
 
 
