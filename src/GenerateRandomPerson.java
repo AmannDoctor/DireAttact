@@ -9,6 +9,15 @@ public class GenerateRandomPerson {
     public String[] getLnlist() {
         return lnlist;
     }
+    public String[] getFnlist(){ return fnlist;}
+    public String randomLastName(){
+        Random random= new Random();
+        return lnlist[random.nextInt(lnlist.length)];
+    }
+    public String randomFirstName(){
+        Random random= new Random();
+        return fnlist[random.nextInt(fnlist.length)];
+    }
     public GenerateRandomPerson(){
 
     }

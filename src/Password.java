@@ -6,24 +6,7 @@ public class Password {
     char[] unique={'\'','\"','\\','!','?',';',']','[','{',':','}','>','<','.','@','#','$','^'};
     String alphabet = "abcdefghijklmnopqrstuvwxyz";
     public Password(){
-        GenerateRandomPerson grp= new GenerateRandomPerson();
-        Person p= grp.genranper();
-        String m="";
-        String d="";
 
-        if(p.getBm()<10){
-            m="0"+p.getBm();
-        }
-        else{
-            m=""+p.getBm();
-        }
-        if(p.getBd()<10){
-            d="0"+p.getBd();
-        }
-        else{
-            d=""+p.getBd();
-        }
-        password=""+p.getFn().charAt(0)+p.getLn().charAt(0)+m+d+p.getBy();
 
     }
     public Password(String password){
