@@ -57,8 +57,6 @@ public class databaseTest {
             System.out.println("password is : " + found);
             return;
         }
-
-        System.out.println("password is not found");
     }
 
     // check if password is in the database
@@ -203,11 +201,33 @@ public class databaseTest {
         return hexString;
     }
 
+    // Random Password Generator
+    public static void randomPass(int passLength) throws SQLException {
+
+        if (passLength <= 0){
+            System.out.println("The Length of the password has to be greater than 0");
+            return;
+        }
+
+
+        char[] allCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789^$*.[]{}()?-!@#%&,><:;|_~".toCharArray();
+        Random rand = new Random();
+
+        StringBuilder newPass = new StringBuilder();
+
+        System.out.println("Generating random password with a length of " + passLength);
+        for(;passLength>0; passLength-=1){
+            newPass.append(allCharacters[rand.nextInt(allCharacters.length)]);
+        }
+        System.out.println("The newly generated password is: " + newPass);
+        checkPass(newPass.toString());
+    }
+
     public static void commands() throws SQLException, FileNotFoundException {
         Scanner in = new Scanner(System.in);
         String hash;
         while (true) {
-            System.out.println("Enter a command: [db][text][passwordCheck]");
+            System.out.println("Enter a command: [db][text][passwordCheck][exit]");
             switch (in.nextLine().toLowerCase()) {
                 case "database":
                 case "db":
@@ -237,6 +257,11 @@ public class databaseTest {
                 case "x":
                 case "exit":
                     return;
+                case "rp":
+                case "rand":
+                    System.out.println("Enter the length of the randomly generated password");
+                    randomPass(in.nextInt());
+                    break;
                 default:
                     System.out.println("Enter a valid command");
                     System.out.println("[database][text]");
