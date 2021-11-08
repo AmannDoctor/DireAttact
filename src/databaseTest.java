@@ -292,7 +292,10 @@ public class databaseTest {
         checkPass(pass);
     }
 
-    // Mac's code
+    /**
+     * Takes in 10000 random passwords from the dictionary, gathers the common details about the string,
+     * and uses the information to try and generate a new password based on the entire array
+     */
     public static void generatePasswordInfo() throws SQLException {
         char[] sc = "/!*@#$%^&*()\"{}_[]|\\?/<>,.".toCharArray();
         char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
@@ -304,8 +307,8 @@ public class databaseTest {
         String[] p = new String[]{};
         Object[] combined;
         Password pass = new Password();
-        int[] info=new int[]{0,0,0,0,0};
-        double[] total=new double[]{0,0,0,0,0,0};
+        int[] info = new int[]{0, 0, 0, 0, 0};
+        double[] total = new double[]{0, 0, 0, 0, 0, 0};
 
 
         int size = 0;
@@ -379,11 +382,11 @@ public class databaseTest {
 
             }
 
-
+            // check password and put it into the database
+            checkPass(pstring);
         }
 
-        // check password and put it into the database
-        checkPass(pstring);
+
     }
 
     public static void commands() throws SQLException, FileNotFoundException {
