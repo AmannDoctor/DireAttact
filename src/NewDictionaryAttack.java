@@ -63,7 +63,7 @@ public class NewDictionaryAttack {
     }
 
     public static String bytesToHexString(byte[] bytes) {
-        String hexString = new String();
+        String hexString = "";
 
         for (int i = 0; i < bytes.length; i++) {
             String hex = Integer.toHexString(0xFF & bytes[i]);

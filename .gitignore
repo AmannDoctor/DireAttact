@@ -1,3 +1,8 @@
 
 .idea/misc.xml
 Dictionary/dictionary.txt
+*.class
+Dictionary/realhuman_phill.txt
+out/production/DireAttact/databaseTest.class
+out/production/DireAttact/databaseTest.class
+*.class
